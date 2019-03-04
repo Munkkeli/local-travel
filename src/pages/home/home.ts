@@ -1,72 +1,53 @@
-import { Component, ViewChild } from '@angular/core';
-import { Content, NavController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController } from 'ionic-angular';
+// import { PhotoViewer } from '@ionic-native/photo-viewer';
 import { MediaProvider } from '../../providers/media/media';
-import { Pic } from '../../interfaces/mediaInterfaces';
-import { Observable } from 'rxjs';
+import { IPic } from '../../interfaces/media';
+import { Observable } from 'rxjs/Observable';
+import { PipesModule } from '../../pipes/pipes.module';
 import { UploadPage } from '../upload/upload';
 import { PlayerPage } from '../player/player';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html',
+  templateUrl: 'home.html'
 })
 export class HomePage {
-  @ViewChild(Content) content: Content;
-
-  picArray: Observable<Pic[]>;
-  start = 0;
-
   constructor(
-    public navCtrl: NavController, public mediaProvider: MediaProvider) {
-
-  }
-
-  getAllFiles() {
-    this.picArray = this.mediaProvider.getAllMedia(this.start);
-  }
-
-  doRefresh(refresher) {
-    this.start = 0;
-    this.getAllFiles();
-    this.picArray.subscribe(() => {
-      console.log('refresh complete');
-      refresher.complete();
-    });
-  }
-
-  showFile(file) {
-    this.mediaProvider.refresh = false;
-    this.navCtrl.push(PlayerPage, { fileId: file }).catch();
-  }
-
-  loadMore() {
-    this.start += 20;
-    this.picArray = combineLatest(
-      this.picArray,
-      this.mediaProvider.getAllMedia(this.start),
-      (...arrays) => arrays.reduce((acc, array) => {
-        return [...acc, ...array];
-      }, [])
-    );
-    console.log('fiksi');
-    setTimeout(() => {
-      this.content.scrollTo(0, this.start * 96 - 96, 400).catch();
-      console.log(this.content.scrollTop);
-    }, 200);
-  }
-
-  openUpload() {
-    console.log('go to upload');
-    this.mediaProvider.refresh = false;
-    this.navCtrl.push(UploadPage).catch();
-  }
+    public navCtrl: NavController,
+    // private photoViewer: PhotoViewer,
+    public mediaProvider: MediaProvider,
+    public pipesModule: PipesModule
+  ) {}
 
   ionViewDidEnter() {
-    if (this.mediaProvider.refresh) {
-      this.start = 0;
-      this.getAllFiles();
-    }
+    this.showUploadButton = this.mediaProvider.loggedIn;
+    this.getAllFiles();
   }
 
+  showUploadButton = false;
+  picArray: Observable<IPic[]>;
+
+  getAllFiles = () => {
+    this.picArray = this.mediaProvider.getAllFilesByTag('test-lt');
+  };
+
+  showFullImage = (item: IPic) => {
+    /*
+    this.photoViewer.show(
+      this.mediaProvider.mediaUploads + item.filename,
+      item.title
+    );
+    */
+
+    this.navCtrl
+      .push(PlayerPage, {
+        id: item.file_id
+      })
+      .catch(console.error);
+  };
+
+  goToUpload = () => {
+    this.navCtrl.push(UploadPage).catch(console.error);
+  };
 }

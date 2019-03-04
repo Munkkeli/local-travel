@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import {
-  AlertController,
-  NavController,
-  NavParams,
-} from 'ionic-angular';
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { MediaProvider } from '../../providers/media/media';
-import { Login, UserCreated } from '../../interfaces/mediaInterfaces';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UsernameValidator } from '../../validators/username-validator';
-import { PasswordMatchValidator } from '../../validators/password-match-validator';
+import { HomePage } from '../home/home';
 
 /**
  * Generated class for the LoginRegisterPage page.
@@ -19,93 +18,126 @@ import { PasswordMatchValidator } from '../../validators/password-match-validato
 
 @Component({
   selector: 'page-login-register',
-  templateUrl: 'login-register.html',
+  templateUrl: 'login-register.html'
 })
 export class LoginRegisterPage {
-
-  userAlert = false;
-
-  user: any = {};
-
-  showRegister = false;
-
-  submitAttempt = false;
-
-  registerForm: FormGroup;
-
   constructor(
-    public navCtrl: NavController, public navParams: NavParams,
-    public mediaProvider: MediaProvider, public alertCtrl: AlertController,
-    public formBuilder: FormBuilder,
-    public usernameValidator: UsernameValidator) {
-    this.registerForm = this.formBuilder.group({
-      username: [
-        '',
-        Validators.compose([
-          Validators.minLength(3),
-          Validators.pattern('[a-zA-Z0-9_-]*'),
-          Validators.required]),
-        usernameValidator.checkUsername.bind(usernameValidator)],
-      email: [
-        '',
-        Validators.compose([
-          Validators.minLength(3),
-          Validators.pattern(
-            '^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$'),
-          Validators.required])],
-      full_name: ['', Validators.compose([Validators.pattern('[a-zA-Z- ]*')])],
-      password: [
-        '',
-        Validators.compose([Validators.minLength(3), Validators.required])],
-      verifyPassword: ['', Validators.compose([Validators.required])],
-    }, {
-      validator: PasswordMatchValidator('password', 'verifyPassword'),
-    });
-  }
-
-  showAlert(message) {
-    const alert = this.alertCtrl.create({
-      title: 'Error!',
-      subTitle: message,
-      buttons: ['OK'],
-    });
-    alert.present().catch();
-  }
-
-  login() {
-    console.log(this.user);
-    this.mediaProvider.login(this.user).subscribe((data: Login) => {
-      console.log(data);
-      localStorage.setItem('token', data.token);
-      this.mediaProvider.user = data.user;
-      this.mediaProvider.logged = true;
-      this.navCtrl.parent.select(0);
-    }, error => {
-      console.log(error);
-      this.showAlert(error.statusText);
-    });
-  }
-
-  register() {
-    this.submitAttempt = true;
-    if (!this.registerForm.valid) {
-      this.showAlert('Form not valid!');
-    } else {
-      delete this.registerForm.value.verifyPassword;
-      this.user = this.registerForm.value;
-      this.mediaProvider.register(this.user).subscribe(
-        (data: UserCreated) => {
-          this.login();
-        }, error => {
-          console.log(JSON.stringify(error));
-          this.showAlert(error.statusText);
-        });
-    }
-
-  }
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private mediaProvider: MediaProvider,
+    public toastCtrl: ToastController
+  ) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginRegisterPage');
   }
 
+  viewRegister = false;
+
+  error = {
+    username: false,
+    password: false
+  };
+
+  login = {} as { username: string; password: string };
+  register = {} as {
+    username: string;
+    email: string;
+    full_name: string;
+    password: string;
+    re_password: string;
+  };
+
+  showErrorToast = (error: string) => {
+    const toast = this.toastCtrl.create({
+      message: error,
+      duration: 3000
+    });
+    toast.present().catch(console.error);
+  };
+
+  checkUsername = async (control: AbstractControl) =>
+    new Promise(resolve => {
+      if (!control || !control.value) return resolve(null);
+      this.mediaProvider.checkUsername(control.value).subscribe(res => {
+        if (!res.available) return resolve({ usernameTaken: true });
+        return resolve(null);
+      });
+    });
+
+  checkFieldValidity = (field: string) => {
+    return (
+      this.registerForm.controls[field].invalid &&
+      this.registerForm.controls[field].dirty &&
+      this.registerForm.controls[field].touched &&
+      this.registerForm.value[field]
+    );
+  };
+
+  registerForm = new FormGroup({
+    username: new FormControl(
+      '',
+      [Validators.required, Validators.minLength(3)],
+      this.checkUsername
+    ),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    full_name: new FormControl(''),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(5)
+    ]),
+    re_password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(5),
+      (control: AbstractControl) => {
+        if (!control.parent) return null;
+        if (control.parent.value.password !== control.value) {
+          return { passwordMatch: true };
+        }
+        return null;
+      }
+    ])
+  });
+
+  loginFormSubmit = (data?: { username: string; password: string }) => {
+    this.mediaProvider.login(data || this.login).subscribe(
+      res => {
+        this.mediaProvider.loggedIn = true;
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('user', JSON.stringify(res.user));
+        this.login = {} as any;
+        this.navCtrl.push(HomePage).catch(console.error);
+      },
+      error => {
+        console.error(error);
+        this.showErrorToast('Invalid credentials');
+      }
+    );
+  };
+
+  registerFormSubmit = () => {
+    this.mediaProvider
+      .register({
+        ...this.registerForm.value,
+        re_password: undefined
+      })
+      .subscribe(
+        res => {
+          this.viewRegister = false;
+          this.loginFormSubmit({
+            username: this.registerForm.get('username').value,
+            password: this.registerForm.get('password').value
+          });
+          this.registerForm.reset();
+        },
+        error => {
+          console.error(error);
+          this.showErrorToast('Something went wrong');
+        }
+      );
+  };
+
+  toggleViewRegister = () => {
+    this.viewRegister = !this.viewRegister;
+  };
 }

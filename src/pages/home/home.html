@@ -1,39 +1,29 @@
+<!--
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-    <ion-buttons *ngIf="mediaProvider.logged" end>
-      <button ion-button (click)="openUpload()">
-        <ion-icon color="primary" name="add-circle"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-navbar>
+  <ion-navbar> <ion-title> Ionic Blank </ion-title> </ion-navbar>
 </ion-header>
+-->
 
-<ion-content padding >
-  <ion-refresher (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content
-      pullingText="Pull to refresh..."
-      refreshingText="Refreshing...">
-    </ion-refresher-content>
-  </ion-refresher>
+<ion-content padding>
+  <ion-fab right bottom>
+    <button *ngIf="showUploadButton" ion-fab (click)="goToUpload()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
   <ion-list>
-    <ion-item *ngFor="let pic of picArray | async">
+    <ion-item *ngFor="let item of (picArray | async)">
       <ion-thumbnail item-start>
-        <img [src]="pic.file_id | thumbnail | async" [alt]="pic.title" [ngStyle]="{'filter': 'brightness('+(pic.description | filters).brightness/100+') contrast('+(pic.description | filters).contrast/100+') saturate('+(pic.description | filters).saturation/100+') sepia('+(pic.description | filters).warmth/100+')'}">
-        <ion-icon *ngIf="pic.media_type === 'image'" name="image"></ion-icon>
-        <ion-icon *ngIf="pic.media_type === 'video'" name="film"></ion-icon>
-        <ion-icon *ngIf="pic.media_type === 'audio'" name="volume-mute"></ion-icon>
+        <img
+          [src]="
+            mediaProvider.mediaUploads + (item.file_id | thumbnailPipe: 'small')
+          "
+        />
       </ion-thumbnail>
-      <h2>{{pic.title}}
-      </h2>
-      <p>{{pic.time_added | date:"d.M.y"}}</p>
-      <p>{{pic.description | description}}</p>
-      <button ion-button clear item-end (click)="showFile(pic.file_id)">View</button>
-    </ion-item>
-    <ion-item>
-      <button ion-button block (click)="loadMore()">Load more...</button>
+      <h2>{{ item.title }}</h2>
+      <p>{{ item.details }}</p>
+      <button ion-button clear item-end (click)="showFullImage(item)">
+        View
+      </button>
     </ion-item>
   </ion-list>
 </ion-content>

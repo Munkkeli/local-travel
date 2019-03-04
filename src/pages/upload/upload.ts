@@ -1,16 +1,13 @@
 import { Component } from '@angular/core';
 import {
+  IonicPage,
   LoadingController,
   NavController,
-  NavParams, Platform, normalizeURL,
+  NavParams,
+  Platform
 } from 'ionic-angular';
 import { MediaProvider } from '../../providers/media/media';
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import {
-  FileTransfer,
-  FileTransferObject,
-  FileUploadOptions,
-} from '@ionic-native/file-transfer';
+import { Chooser } from '@ionic-native/chooser';
 
 /**
  * Generated class for the UploadPage page.
@@ -19,95 +16,152 @@ import {
  * Ionic pages and navigation.
  */
 
+interface IUpload {
+  title?: string;
+  description?: string;
+}
+
+@IonicPage()
 @Component({
   selector: 'page-upload',
-  templateUrl: 'upload.html',
+  templateUrl: 'upload.html'
 })
 export class UploadPage {
+  upload: IUpload = {};
+  image: any;
+  file: any = null;
+  blob: any = null;
 
-  imagedata: any;
-  file: any;
-  fileInfo: any = {
-    title: '',
-    description: '',
-  };
-  type = '';
-  hidePreview = true;
-  loading = this.loadingCtrl.create({
-    content: 'Uploading, please wait...',
-  });
+  showChooser = false;
+  preview = false;
 
-  filters = {
+  changed = false;
+  style = {
     brightness: 100,
     contrast: 100,
-    warmth: 0,
     saturation: 100,
+    sepia: 0
   };
+  filter = '';
 
   constructor(
-    public navCtrl: NavController, public navParams: NavParams,
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private mediaProvider: MediaProvider,
     public loadingCtrl: LoadingController,
-    public mediaProvider: MediaProvider,
-    public camera: Camera, public platform: Platform,
-    public fileTransfer: FileTransfer) {
+    private chooser: Chooser,
+    public plt: Platform
+  ) {
+    this.showChooser = !plt.is('core');
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UploadPage');
   }
 
-  openGallery() {
-    const options: CameraOptions = {
-      sourceType: 0,
-      quality: 50,
-      mediaType: 2,
+  handleFileChoose = () => {
+    this.chooser
+      .getFile('image/*,video/*,audio/*')
+      .then(file => {
+        if (!file) return;
+
+        const blob = new Blob([file.data], {
+          type: file.mediaType
+        });
+
+        this.blob = blob;
+        this.showPreview(blob, file.mediaType);
+      })
+      .catch(console.error);
+  };
+
+  handleClear = () => {
+    this.upload.title = '';
+    this.upload.description = '';
+    this.file = '';
+    this.blob = '';
+    this.preview = false;
+
+    this.style = {
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      sepia: 0
     };
+  };
 
-    this.camera.getPicture(options).then(imagePath => {
-      console.log(imagePath);
+  handleFileChange = event => {
+    if (event.target.files && event.target.files[0]) {
+      this.file = event.target.files[0];
+      this.showPreview(event.target.files[0], event.target.files[0].type);
+    }
+  };
 
-      this.imagedata = normalizeURL(imagePath);
-      console.log(this.imagedata);
-      if (this.imagedata.includes('jpg')) {
-        this.type = 'image/jpeg';
-      } else {
-        this.type = 'video/mp4';
-        this.imagedata = 'http://via.placeholder.com/640x320/000?text=Audio / Video';
-      }
-      this.hidePreview = false;
-      this.file = imagePath;
-    }).catch();
-  }
+  handleStyleChange = () => {
+    this.filter = `brightness(${this.style.brightness}%) contrast(${
+      this.style.contrast
+    }%) saturate(${this.style.saturation}%) sepia(${this.style.sepia}%)`;
 
-  upload() {
-    this.loading.present().catch();
-    const description = `[d]${this.fileInfo.description}[/d]`;
-    const filters = `[f]${JSON.stringify(this.filters)}[/f]`;
-    const fileTransfer: FileTransferObject = this.fileTransfer.create();
+    this.changed = true;
+  };
 
-    const options: FileUploadOptions = {
-      mimeType: this.type,
-      headers: {
-        'x-access-token':
-          localStorage.getItem('token'),
-      },
-      params: {
-        'title': this.fileInfo.title,
-        'description': description + filters,
-      },
+  showPreview = (file, mimeType: string) => {
+    if (mimeType.split('/')[0] !== 'image') {
+      return;
+    }
+
+    this.preview = true;
+
+    const reader = new FileReader();
+    reader.onload = (event: any) => {
+      this.image = event.target.result;
     };
+    reader.readAsDataURL(file);
+  };
 
-    fileTransfer.upload(this.file, this.mediaProvider.baseUrl + '/media',
-      options).then((data) => {
-      console.log('OUKEI', data);
-      setTimeout(() => {
-        this.loading.dismiss().catch();
-        this.mediaProvider.refresh = true;
-        this.navCtrl.pop().catch();
-      }, 2000);
-    }, (err) => {
-      console.log('virhe', err);
-      this.loading.dismiss().catch();
+  uploadFormSubmit = () => {
+    const loading = this.loadingCtrl.create({
+      content: 'Please wait...'
     });
-  }
+
+    loading.present().catch(console.error);
+
+    let description = `[d]${this.upload.description || ''}[/d]`;
+    if (this.changed) {
+      description += `[f]${JSON.stringify(this.style)}[/f]`;
+    }
+
+    const data = new FormData();
+    data.append('title', this.upload.title || '');
+    data.append('description', description);
+    data.append('file', this.file || this.blob);
+
+    const moveOn = () => {
+      this.file = null;
+      this.blob = null;
+
+      setTimeout(() => {
+        loading.dismiss().catch(console.error);
+        this.navCtrl.pop().catch(console.error);
+      }, 2000);
+    };
+
+    this.mediaProvider.upload(data).subscribe(res => {
+      this.mediaProvider.addTag(res.file_id, 'test-lt').subscribe(res2 => {
+        moveOn();
+      });
+
+      /*
+      if (this.changed) {
+        this.mediaProvider
+          .addTag(res.file_id, `filter: ${this.filter}`)
+          .subscribe(res2 => {
+            moveOn();
+          });
+      } else {
+        moveOn();
+      }
+      */
+    });
+  };
 }

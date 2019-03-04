@@ -5,63 +5,103 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>upload</ion-title>
+    <ion-title>Upload media</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
-  <form (ngSubmit)="upload()">
-    <button type="button" block color="secondary" ion-button (click)="openGallery()">Choose media file</button>
-    <ion-item no-lines>
-      <ion-label>
-        Upload media
-      </ion-label>
+  <form (ngSubmit)="uploadFormSubmit()">
+    <ion-item>
+      <ion-label floating>Title</ion-label>
+      <ion-input
+        type="text"
+        [(ngModel)]="upload.title"
+        name="title"
+      ></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label color="primary" stacked>Title</ion-label>
-      <ion-input name="title" placeholder="title input" [(ngModel)]="fileInfo.title"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color="primary" stacked>Descripiton</ion-label>
-      <ion-textarea name="description" placeholder="description input"
-                    [(ngModel)]="fileInfo.description"></ion-textarea>
+      <ion-label floating>Description</ion-label>
+      <ion-textarea
+        [(ngModel)]="upload.description"
+        name="description"
+      ></ion-textarea>
     </ion-item>
 
-    <button type="submit" ion-button block>Upload</button>
+    <ion-item *ngIf="!showChooser">
+      <ion-label floating>File</ion-label>
+      <ion-input
+        type="file"
+        (change)="handleFileChange($event)"
+        name="file"
+      ></ion-input>
+    </ion-item>
 
+    <button
+      *ngIf="showChooser"
+      ion-button
+      type="button"
+      (click)="handleFileChoose()"
+    >
+      Choose a file
+    </button>
+
+    <button
+      ion-button
+      type="submit"
+      [disabled]="!((file || blob) && upload.title)"
+      block
+    >
+      Upload
+    </button>
+    <button ion-button type="button" clear block (click)="handleClear()">
+      Clear form
+    </button>
   </form>
-  <ion-card [hidden]="hidePreview">
-    <img #preview [src]="imagedata | safe"
-         [ngStyle]="{'filter': 'brightness('+filters.brightness/100+') contrast('+filters.contrast/100+') saturate('+filters.saturation/100+') sepia('+filters.warmth/100+')'}">
-    <div *ngIf="type.includes('image')">
-      <ion-item>
-        <ion-range min="0" max="200" step="1" [(ngModel)]="filters.brightness">
-          <ion-icon small range-left name="sunny"></ion-icon>
-          <ion-icon range-right name="sunny"></ion-icon>
-        </ion-range>
-      </ion-item>
-      <ion-item>
-        <ion-range min="0" max="200" step="1" [(ngModel)]="filters.contrast">
-          <ion-icon small range-left name="contrast"></ion-icon>
-          <ion-icon range-right name="contrast"></ion-icon>
-        </ion-range>
-      </ion-item>
-      <ion-item>
-        <ion-range min="0" max="200" step="1" [(ngModel)]="filters.saturation">
-          <ion-icon small range-left name="water"></ion-icon>
-          <ion-icon range-right name="water"></ion-icon>
-        </ion-range>
-      </ion-item>
-      <ion-item>
-        <ion-range min="0" max="100" step="1" [(ngModel)]="filters.warmth">
-          <ion-icon small range-left name="thermometer"></ion-icon>
-          <ion-icon range-right name="thermometer"></ion-icon>
-        </ion-range>
-      </ion-item>
-    </div>
-  </ion-card>
+
+  <div *ngIf="preview">
+    <ion-range
+      [(ngModel)]="style.brightness"
+      pin="true"
+      max="200"
+      (ionChange)="handleStyleChange()"
+    >
+      <ion-icon small range-left name="sunny"></ion-icon>
+      <ion-icon range-right name="sunny"></ion-icon>
+    </ion-range>
+    <ion-range
+      [(ngModel)]="style.contrast"
+      pin="true"
+      max="200"
+      (ionChange)="handleStyleChange()"
+    >
+      <ion-icon small range-left name="contrast"></ion-icon>
+      <ion-icon range-right name="contrast"></ion-icon>
+    </ion-range>
+    <ion-range
+      [(ngModel)]="style.saturation"
+      pin="true"
+      max="200"
+      (ionChange)="handleStyleChange()"
+    >
+      <ion-icon small range-left name="water"></ion-icon>
+      <ion-icon range-right name="water"></ion-icon>
+    </ion-range>
+    <ion-range
+      [(ngModel)]="style.sepia"
+      pin="true"
+      max="100"
+      (ionChange)="handleStyleChange()"
+    >
+      <ion-icon small range-left name="thermometer"></ion-icon>
+      <ion-icon range-right name="thermometer"></ion-icon>
+    </ion-range>
+
+    <img
+      class="image"
+      [ngStyle]="{ filter: filter }"
+      *ngIf="image"
+      [src]="image"
+    />
+  </div>
 </ion-content>

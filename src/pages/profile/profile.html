@@ -1,38 +1,18 @@
 <!--
-  Generated template for the LogoutPage page.
+  Generated template for the ProfilePage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>Profile</ion-title>
-    <ion-buttons end>
-      <button ion-button (click)="logout()">
-        Logout &nbsp;<ion-icon color="primary" name="log-out"></ion-icon></button>
-    </ion-buttons>
-  </ion-navbar>
-
+  <ion-navbar> <ion-title>profile</ion-title> </ion-navbar>
 </ion-header>
 
+<ion-content padding>
+  <img [src]="mediaProvider.mediaUploads + profilePicture" />
+  <h1>{{ userInformation.full_name }}</h1>
+  <p>@{{ userInformation.username }}</p>
+  <p>{{ userInformation.email }}</p>
 
-<ion-content class="card-background-page">
-  <ion-card>
-    <img [src]="'profile' | avatar | async| thumbnail:'large' | async"/>
-
-    <div class="card-title">
-      {{mediaProvider.user.username}}
-    </div>
-    <div class="card-subtitle">
-      {{ mediaProvider.user.full_name}}
-    </div>
-    <div class="card-subtitle">
-      {{ mediaProvider.user.email}}
-    </div>
-    <ion-item>
-      <button ion-button (click)="showMyFiles()">My files</button>
-    </ion-item>
-  </ion-card>
-
+  <button ion-button clear item-end (click)="logout()">Logout</button>
 </ion-content>

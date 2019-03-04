@@ -1,5 +1,17 @@
-<ion-tabs>
-  <ion-tab [root]="homeRoot" tabTitle="Home" tabIcon="camera"></ion-tab>
-  <ion-tab [show]="!mediaProvider.logged" [root]="loginRegisterRoot" tabTitle="Login/register" tabIcon="log-in"></ion-tab>
-  <ion-tab [show]="mediaProvider.logged" [root]="profileRoot" tabTitle="Profile" tabIcon="person"></ion-tab>
-</ion-tabs>
+<ion-content padding>
+  <ion-tabs>
+    <ion-tab [root]="home" tabTitle="Home" tabIcon="home"></ion-tab>
+    <ion-tab
+      [show]="!mediaProvider.loggedIn"
+      [root]="login"
+      tabTitle="Login"
+      tabIcon="person-add"
+    ></ion-tab>
+    <ion-tab
+      [show]="mediaProvider.loggedIn"
+      [root]="logout"
+      tabTitle="Profile"
+      tabIcon="contact"
+    ></ion-tab>
+  </ion-tabs>
+</ion-content>

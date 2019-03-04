@@ -5,37 +5,33 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>player</ion-title>
+    <ion-title>Player</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
-  <ion-card *ngIf="file">
-    <ion-item>
-      <h2>{{file.title}}</h2>
-    </ion-item>
-    <pinch-zoom *ngIf="type === 'image'">
-      <img #image [src]="this.mediaProvider.imageUrl + file.filename" [alt]="file.title"
-           [ngStyle]="{'filter': 'brightness('+(file.description | filters).brightness/100+') contrast('+(file.description | filters).contrast/100+') saturate('+(file.description | filters).saturation/100+') sepia('+(file.description | filters).warmth/100+')'}">
+  <div *ngIf="media">
+    <video *ngIf="media.media_type === 'video'" controls>
+      <source
+        [src]="mediaProvider.mediaUploads + media.filename"
+        [type]="media.mime_type"
+      />
+    </video>
+    <audio *ngIf="media.media_type === 'audio'" controls>
+      <source
+        [src]="mediaProvider.mediaUploads + media.filename"
+        [type]="media.mime_type"
+      />
+    </audio>
+    <img
+      *ngIf="media.media_type === 'image'"
+      [src]="mediaProvider.mediaUploads + media.filename"
+      [ngStyle]="{ filter: style }"
+    />
 
-    </pinch-zoom>
-    <video *ngIf="type === 'video'" [src]="this.mediaProvider.imageUrl + file.filename" controls
-           [poster]="this.mediaProvider.imageUrl + file.screenshot"></video>
-
-    <audio *ngIf="type === 'audio'" [src]="this.mediaProvider.imageUrl + file.filename" controls></audio>
-
-    <ion-card-content *ngIf="user">
-      <p>{{file.description | description}}</p>
-      <h3>By: {{ user.username }}</h3>
-      <p>{{ user.email }}</p>
-      <button ion-button>
-        <ion-icon name="thumbs-up"></ion-icon>
-      </button>
-      <span>Likes: {{likes}}</span>
-    </ion-card-content>
-  </ion-card>
+    <h2>{{ media.title }}</h2>
+    <h5>by {{ username }}</h5>
+    <p>{{ media.description | description }}</p>
+  </div>
 </ion-content>
