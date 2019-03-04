@@ -1,0 +1,5 @@
+<ion-tabs>
+  <ion-tab [root]="homeRoot" tabTitle="Home" tabIcon="camera"></ion-tab>
+  <ion-tab [show]="!mediaProvider.logged" [root]="loginRegisterRoot" tabTitle="Login/register" tabIcon="log-in"></ion-tab>
+  <ion-tab [show]="mediaProvider.logged" [root]="profileRoot" tabTitle="Profile" tabIcon="person"></ion-tab>
+</ion-tabs>
