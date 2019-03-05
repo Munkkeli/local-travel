@@ -32,6 +32,24 @@ export class LoginRegisterPage {
     console.log('ionViewDidLoad LoginRegisterPage');
   }
 
+  ionViewWillEnter() {
+    const tabs = document.querySelectorAll('.tabbar');
+    if (tabs !== null) {
+      Object.keys(tabs).map(key => {
+        tabs[key].style.transform = 'translateY(56px)';
+      });
+    }
+  }
+
+  ionViewDidLeave() {
+    const tabs = document.querySelectorAll('.tabbar');
+    if (tabs !== null) {
+      Object.keys(tabs).map(key => {
+        tabs[key].style.transform = 'translateY(0)';
+      });
+    }
+  }
+
   viewRegister = false;
 
   error = {

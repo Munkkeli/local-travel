@@ -1,3 +1,30 @@
 page-login-register {
+  .login-register {
+    .fixed-content,
+    .scroll-content {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
 
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+
+      .background {
+        height: 75vh;
+        width: 100vw;
+        background-color: red;
+        img {
+          max-width: 110%;
+        }
+      }
+
+      .form {
+        position: absolute;
+        bottom: 1rem;
+      }
+    }
+  }
 }
