@@ -69,7 +69,8 @@ export class LoginRegisterPage {
   showErrorToast = (error: string) => {
     const toast = this.toastCtrl.create({
       message: error,
-      duration: 3000
+      duration: 3000,
+      position: 'top'
     });
     toast.present().catch(console.error);
   };

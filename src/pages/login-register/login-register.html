@@ -12,18 +12,14 @@
 -->
 
 <ion-content class="login-register">
-  <div class="wrapper">
+  <div *ngIf="!viewRegister" class="wrapper">
     <div class="background"></div>
     <div class="form-wrapper">
       <ion-card>
         <ion-card-content>
-          <form
-            id="login-form"
-            *ngIf="!viewRegister"
-            (ngSubmit)="loginFormSubmit()"
-          >
+          <form id="login-form" (ngSubmit)="loginFormSubmit()">
             <ion-item>
-              <ion-label stacked>Username</ion-label>
+              <ion-label floating>Username</ion-label>
               <ion-input
                 type="text"
                 [(ngModel)]="login.username"
@@ -31,7 +27,7 @@
               ></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label stacked>Password</ion-label>
+              <ion-label floating>Password</ion-label>
               <ion-input
                 type="password"
                 [(ngModel)]="login.password"
@@ -41,109 +37,124 @@
 
             <div class="divider"></div>
           </form>
-          <button ion-button form="login-form" type="submit" block>
-            Login
+          <button
+            class="login"
+            ion-button
+            form="login-form"
+            type="submit"
+            block
+          >
+            Log In
           </button>
         </ion-card-content>
       </ion-card>
       <button
+        class="register"
         ion-button
         color="dark"
         (click)="toggleViewRegister()"
         clear
         block
       >
-        No account yet? Sign Up
+        No account yet? <b>Sign Up</b>
       </button>
-      <form
-        *ngIf="viewRegister"
-        [formGroup]="registerForm"
-        (ngSubmit)="registerFormSubmit()"
-      >
-        <ion-item>
-          <ion-label stacked>
-            <h2>Username</h2>
-            <p *ngIf="checkFieldValidity('username')" style="color: red;">
-              Username is in use, or is less than 3 characters long
-            </p>
-          </ion-label>
-          <ion-input
-            type="text"
-            formControlName="username"
-            name="username"
-          ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label stacked>
-            <h2>Email</h2>
-            <p *ngIf="checkFieldValidity('email')" style="color: red;">
-              Email address is invalid
-            </p>
-          </ion-label>
-          <ion-input
-            type="email"
-            formControlName="email"
-            name="email"
-          ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label stacked>
-            <h2>Full Name</h2>
-          </ion-label>
-          <ion-input
-            type="text"
-            formControlName="full_name"
-            name="full_name"
-          ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label stacked>
-            <h2>Password</h2>
-            <p *ngIf="checkFieldValidity('password')" style="color: red;">
-              Password must be 5 or more characters long
-            </p>
-          </ion-label>
-          <ion-input
-            type="password"
-            formControlName="password"
-            name="password"
-          ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label stacked>
-            <h2>Re-Password</h2>
-            <p *ngIf="checkFieldValidity('re_password')" style="color: red;">
-              Passwords must match
-            </p>
-          </ion-label>
-          <ion-input
-            type="password"
-            formControlName="re_password"
-            name="re_password"
-          ></ion-input>
-        </ion-item>
+    </div>
+  </div>
 
-        <div padding>
-          <button
-            ion-button
-            type="submit"
-            [disabled]="!registerForm.valid"
-            block
-          >
-            Register
-          </button>
-          <div class="divider"></div>
-          <button
-            ion-button
-            color="dark"
-            (click)="toggleViewRegister()"
-            clear
-            block
-          >
-            Already have an account? Sign in
-          </button>
-        </div>
-      </form>
+  <div *ngIf="viewRegister" class="register-content wrapper">
+    <div class="form-wrapper">
+      <ion-card>
+        <ion-card-content>
+          <form [formGroup]="registerForm" (ngSubmit)="registerFormSubmit()">
+            <ion-item>
+              <ion-label floating>
+                <h2>Username</h2>
+                <p *ngIf="checkFieldValidity('username')" style="color: red;">
+                  Username is in use, or is less than 3 characters long
+                </p>
+              </ion-label>
+              <ion-input
+                type="text"
+                formControlName="username"
+                name="username"
+              ></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label floating>
+                <h2>Email</h2>
+                <p *ngIf="checkFieldValidity('email')" style="color: red;">
+                  Email address is invalid
+                </p>
+              </ion-label>
+              <ion-input
+                type="email"
+                formControlName="email"
+                name="email"
+              ></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label floating>
+                <h2>Full Name</h2>
+              </ion-label>
+              <ion-input
+                type="text"
+                formControlName="full_name"
+                name="full_name"
+              ></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label floating>
+                <h2>Password</h2>
+                <p *ngIf="checkFieldValidity('password')" style="color: red;">
+                  Password must be 5 or more characters long
+                </p>
+              </ion-label>
+              <ion-input
+                type="password"
+                formControlName="password"
+                name="password"
+              ></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label floating>
+                <h2>Re-Password</h2>
+                <p
+                  *ngIf="checkFieldValidity('re_password')"
+                  style="color: red;"
+                >
+                  Passwords must match
+                </p>
+              </ion-label>
+              <ion-input
+                type="password"
+                formControlName="re_password"
+                name="re_password"
+              ></ion-input>
+            </ion-item>
+
+            <button
+              class="login"
+              ion-button
+              type="submit"
+              [disabled]="!registerForm.valid"
+              block
+            >
+              Sign Up
+            </button>
+          </form>
+        </ion-card-content>
+      </ion-card>
+
+      <button
+        class="register"
+        ion-button
+        color="dark"
+        (click)="toggleViewRegister()"
+        clear
+        block
+      >
+        Already have an account? <b>Log In</b>
+      </button>
     </div>
   </div>
 </ion-content>
