@@ -13,15 +13,17 @@
 
 <ion-content class="login-register">
   <div class="wrapper">
-    <div class="background">
-      <img src="/assets/imgs/login-register.png" />
-    </div>
-    <div class="form">
+    <div class="background"></div>
+    <div class="form-wrapper">
       <ion-card>
         <ion-card-content>
-          <form *ngIf="!viewRegister" (ngSubmit)="loginFormSubmit()">
+          <form
+            id="login-form"
+            *ngIf="!viewRegister"
+            (ngSubmit)="loginFormSubmit()"
+          >
             <ion-item>
-              <ion-label floating>Username</ion-label>
+              <ion-label stacked>Username</ion-label>
               <ion-input
                 type="text"
                 [(ngModel)]="login.username"
@@ -29,7 +31,7 @@
               ></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label floating>Password</ion-label>
+              <ion-label stacked>Password</ion-label>
               <ion-input
                 type="password"
                 [(ngModel)]="login.password"
@@ -37,28 +39,29 @@
               ></ion-input>
             </ion-item>
 
-            <button ion-button type="submit" block>Login</button>
             <div class="divider"></div>
-            <button
-              ion-button
-              color="dark"
-              (click)="toggleViewRegister()"
-              clear
-              block
-            >
-              No account yet? Sign Up
-            </button>
           </form>
+          <button ion-button form="login-form" type="submit" block>
+            Login
+          </button>
         </ion-card-content>
       </ion-card>
-
+      <button
+        ion-button
+        color="dark"
+        (click)="toggleViewRegister()"
+        clear
+        block
+      >
+        No account yet? Sign Up
+      </button>
       <form
         *ngIf="viewRegister"
         [formGroup]="registerForm"
         (ngSubmit)="registerFormSubmit()"
       >
         <ion-item>
-          <ion-label floating>
+          <ion-label stacked>
             <h2>Username</h2>
             <p *ngIf="checkFieldValidity('username')" style="color: red;">
               Username is in use, or is less than 3 characters long
@@ -71,7 +74,7 @@
           ></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label floating>
+          <ion-label stacked>
             <h2>Email</h2>
             <p *ngIf="checkFieldValidity('email')" style="color: red;">
               Email address is invalid
@@ -84,7 +87,7 @@
           ></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label floating>
+          <ion-label stacked>
             <h2>Full Name</h2>
           </ion-label>
           <ion-input
@@ -94,7 +97,7 @@
           ></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label floating>
+          <ion-label stacked>
             <h2>Password</h2>
             <p *ngIf="checkFieldValidity('password')" style="color: red;">
               Password must be 5 or more characters long
@@ -107,7 +110,7 @@
           ></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label floating>
+          <ion-label stacked>
             <h2>Re-Password</h2>
             <p *ngIf="checkFieldValidity('re_password')" style="color: red;">
               Passwords must match
