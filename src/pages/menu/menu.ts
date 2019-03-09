@@ -4,6 +4,7 @@ import { HomePage } from '../home/home';
 import { LoginRegisterPage } from '../login-register/login-register';
 import { ProfilePage } from '../profile/profile';
 import { MediaProvider } from '../../providers/media/media';
+import { SearchPage } from '../search/search';
 
 /**
  * Generated class for the MenuPage page.
@@ -23,6 +24,7 @@ export class MenuPage {
     public mediaProvider: MediaProvider
   ) {}
 
+  search = SearchPage;
   home = HomePage;
   login = LoginRegisterPage;
   logout = ProfilePage;

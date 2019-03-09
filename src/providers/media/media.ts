@@ -16,6 +16,8 @@ export class MediaProvider {
   mediaApi = 'http://media.mw.metropolia.fi/wbma';
   mediaUploads = 'http://media.mw.metropolia.fi/wbma/uploads/';
 
+  tag = 'local-travel';
+
   loggedIn = false;
 
   getAllFiles = () => {
@@ -28,6 +30,23 @@ export class MediaProvider {
 
   getAllFilesByTag = (tag: string) => {
     return this.http.get<IPic[]>(this.mediaApi + '/tags/' + tag);
+  };
+
+  searchAllFiles = (search: string) => {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'x-access-token': localStorage.getItem('token')
+      })
+    };
+
+    return this.http.post<IPic[]>(
+      this.mediaApi + '/media/search',
+      {
+        title: search,
+        description: search
+      },
+      httpOptions
+    );
   };
 
   getUser = (id: number) => {

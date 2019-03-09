@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {
-  IonicPage,
   LoadingController,
   NavController,
   NavParams,
@@ -21,7 +20,6 @@ interface IUpload {
   description?: string;
 }
 
-@IonicPage()
 @Component({
   selector: 'page-upload',
   templateUrl: 'upload.html'

@@ -17,6 +17,7 @@ import { UploadPage } from '../pages/upload/upload';
 import { MediaProvider } from '../providers/media/media';
 import { PipesModule } from '../pipes/pipes.module';
 import { PlayerPage } from '../pages/player/player';
+import { SearchPage } from '../pages/search/search';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { PlayerPage } from '../pages/player/player';
     LogoutPage,
     ProfilePage,
     UploadPage,
-    PlayerPage
+    PlayerPage,
+    SearchPage
   ],
   imports: [
     BrowserModule,
@@ -44,7 +46,8 @@ import { PlayerPage } from '../pages/player/player';
     LogoutPage,
     ProfilePage,
     UploadPage,
-    PlayerPage
+    PlayerPage,
+    SearchPage
   ],
   providers: [
     StatusBar,
