@@ -1,3 +1,37 @@
 page-home {
+  .post {
+    ion-card-content {
+      padding: 0;
 
+      ion-item,
+      .item-md {
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+
+        ion-thumbnail {
+          margin: 0;
+          width: 100%;
+          height: 150px;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .item-inner {
+          padding: 1rem;
+
+          .label {
+            margin: 1rem 0;
+            width: 100%;
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
 }

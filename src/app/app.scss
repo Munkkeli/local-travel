@@ -21,6 +21,9 @@
 .ios,
 .md,
 .wp {
+  ion-content {
+    background-color: color($colors, background);
+  }
   form {
     ion-item {
       padding: 0;
@@ -32,6 +35,11 @@
     border-radius: $card-border-radius;
     box-shadow: $card-shadow;
   }
+
+  .post {
+    margin-bottom: 2rem;
+  }
+
   .button-block {
     padding: 2rem;
     width: 20rem;
@@ -40,7 +48,6 @@
   }
 
   .button-clear {
-    background-color: palevioletred;
     width: 100%;
     border-radius: 0;
   }

@@ -52,11 +52,12 @@ export class UploadPage {
     private chooser: Chooser,
     public plt: Platform
   ) {
-    this.showChooser = !plt.is('core');
+    this.showChooser = !plt.is('core'); // !
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UploadPage');
+    console.log(`show chooser: ${this.showChooser}`);
   }
 
   handleFileChoose = () => {
