@@ -1,3 +1,37 @@
 page-search {
+  ion-content {
+    #search-container {
+      padding: 0;
+      background-color: color($colors, light);
+      margin-bottom: 2rem;
+      border-radius: 2px;
+      overflow: hidden;
+      box-shadow: $card-shadow;
 
+      .item-inner {
+        border-bottom: none !important;
+        padding: 0 !important;
+        background-color: transparent;
+
+        .input-wrapper {
+          background-color: transparent;
+          #search-bar {
+            padding: 1rem;
+            background-color: color($colors, light);
+
+            input {
+              box-shadow: none;
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+    .input-has-focus,
+    .input-has-value {
+      .item-inner {
+        box-shadow: none !important;
+      }
+    }
+  }
 }

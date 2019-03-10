@@ -50,7 +50,7 @@ export class UploadPage {
     private chooser: Chooser,
     public plt: Platform
   ) {
-    this.showChooser = !plt.is('core'); // !
+    this.showChooser = !plt.is('core');
   }
 
   ionViewDidLoad() {
