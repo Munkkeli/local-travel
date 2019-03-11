@@ -36,13 +36,6 @@ export class HomePage {
   };
 
   showFullImage = (item: IPic) => {
-    /*
-    this.photoViewer.show(
-      this.mediaProvider.mediaUploads + item.filename,
-      item.title
-    );
-    */
-
     this.navCtrl
       .push(PlayerPage, {
         id: item.file_id

@@ -21,6 +21,11 @@
 .ios,
 .md,
 .wp {
+  body,
+  p {
+    color: color($colors, textLight);
+    font-family: $karla-regular;
+  }
   ion-content {
     background-color: color($colors, background);
   }
@@ -28,6 +33,27 @@
     ion-item {
       padding: 0;
     }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: $rubik-regular;
+    color: color($colors, textDark);
+  }
+
+  h1,
+  h2 {
+    font-size: 2rem;
+    font-family: $rubik-bold;
+    text-transform: uppercase;
+  }
+
+  ion-label h2 {
+    font-family: $rubik-regular;
+    text-transform: none;
   }
   .card {
     margin: 0;

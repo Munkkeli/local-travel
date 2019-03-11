@@ -33,7 +33,9 @@ $colors: (
   danger: #eb506b,
   light: #fff,
   background: #f6f6f6,
-  dark: #323643
+  dark: #323643,
+  textDark: #474f6f,
+  textLight: #494d52
 );
 
 // App iOS Variables
@@ -76,6 +78,11 @@ $colors: (
 }
 
 @font-face {
+  font-family: 'Rubik-Medium';
+  src: url('../assets/fonts/rubik/Rubik-Medium.ttf');
+}
+
+@font-face {
   font-family: 'Rubik-Bold';
   src: url('../assets/fonts/rubik/Rubik-Bold.ttf');
 }
@@ -95,6 +102,7 @@ $colors: (
 // Font Variables
 // --------------------------------------------------
 $rubik-regular: 'Rubik-Regular', sans-serif;
+$rubik-medium: 'Rubik-Medium', sans-serif;
 $rubik-bold: 'Rubik-Bold', sans-serif;
 $karla-regular: 'Karla-Regular', sans-serif;
 $karla-bold: 'Karla-Bold', sans-serif;
@@ -103,3 +111,5 @@ $karla-bold: 'Karla-Bold', sans-serif;
 // --------------------------------------------------
 $card-border-radius: 5px;
 $card-shadow: 0px 4px 20px 0px rgba(24, 34, 52, 0.15);
+$grid-item-shadow: 0px 4px 14px rgba(24, 34, 52, 0.15);
+$profile-shadow: 0px 4px 14px rgba(24, 34, 52, 0.05);
