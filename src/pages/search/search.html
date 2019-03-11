@@ -5,19 +5,24 @@
   Ionic pages and navigation.
 -->
 
+<ion-item id="search-container">
+  <ion-input
+    id="search-bar"
+    type="text"
+    [(ngModel)]="search"
+    (input)="searchChange()"
+    name="search"
+    placeholder="Search..."
+  ></ion-input>
+</ion-item>
+
 <ion-content padding>
-  <ion-item id="search-container">
-    <ion-input
-      id="search-bar"
-      type="text"
-      [(ngModel)]="search"
-      (input)="searchChange()"
-      name="search"
-      placeholder="Search..."
-    ></ion-input>
-  </ion-item>
   <ion-list>
-    <ion-card *ngFor="let item of (picArray | async)" class="card post">
+    <ion-card
+      *ngFor="let item of picArray"
+      (click)="showFullImage(item)"
+      class="card post"
+    >
       <ion-card-content>
         <ion-item>
           <ion-thumbnail item-start>
@@ -28,12 +33,8 @@
               "
             />
           </ion-thumbnail>
-          <h2>{{ item.title }}</h2>
-          <p>{{ item.description }}</p>
-
-          <button ion-button clear item-end (click)="showFullImage(item)">
-            View
-          </button>
+          <h1>{{ item.title }}</h1>
+          <p>{{ item.description | descriptionPipe }}</p>
         </ion-item>
       </ion-card-content>
     </ion-card>

@@ -3,7 +3,6 @@ import { NavController } from 'ionic-angular';
 // import { PhotoViewer } from '@ionic-native/photo-viewer';
 import { MediaProvider } from '../../providers/media/media';
 import { IPic } from '../../interfaces/media';
-import { Observable } from 'rxjs/Observable';
 import { PipesModule } from '../../pipes/pipes.module';
 import { UploadPage } from '../upload/upload';
 import { PlayerPage } from '../player/player';
@@ -26,10 +25,14 @@ export class HomePage {
   }
 
   showUploadButton = false;
-  picArray: Observable<IPic[]>;
+  picArray: IPic[];
 
   getAllFiles = () => {
-    this.picArray = this.mediaProvider.getAllFilesByTag('test-lt');
+    this.mediaProvider
+      .getAllFilesByTag(this.mediaProvider.tag)
+      .subscribe(res => {
+        this.picArray = res.reverse();
+      });
   };
 
   showFullImage = (item: IPic) => {

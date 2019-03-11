@@ -125,14 +125,18 @@ export class UploadPage {
 
     loading.present().catch(console.error);
 
-    let description = `[d]${this.upload.description || ''}[/d]`;
+    const description = {
+      isLocalTravel: true,
+      description: this.upload.description,
+      style: null as any
+    };
     if (this.changed) {
-      description += `[f]${JSON.stringify(this.style)}[/f]`;
+      description.style = this.style;
     }
 
     const data = new FormData();
     data.append('title', this.upload.title || '');
-    data.append('description', description);
+    data.append('description', JSON.stringify(description));
     data.append('file', this.file || this.blob);
 
     const moveOn = () => {
@@ -146,9 +150,11 @@ export class UploadPage {
     };
 
     this.mediaProvider.upload(data).subscribe(res => {
-      this.mediaProvider.addTag(res.file_id, 'test-lt').subscribe(res2 => {
-        moveOn();
-      });
+      this.mediaProvider
+        .addTag(res.file_id, this.mediaProvider.tag)
+        .subscribe(res2 => {
+          moveOn();
+        });
 
       /*
       if (this.changed) {

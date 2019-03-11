@@ -6,20 +6,18 @@ import { Pipe, PipeTransform } from '@angular/core';
  * See https://angular.io/api/core/Pipe for more info on Angular Pipes.
  */
 @Pipe({
-  name: 'description'
+  name: 'descriptionPipe'
 })
 export class DescriptionPipe implements PipeTransform {
   /**
    * Takes a value and makes it lowercase.
    */
   transform(value: string, ...args) {
-    const pattern = '\\[d\\](.*?)\\[\\/d\\]';
-    const re = new RegExp(pattern);
-
     try {
-      return re.exec(value)[1];
+      const description = JSON.parse(value);
+      return description.description || '';
     } catch (e) {
-      return value;
+      return '';
     }
   }
 }

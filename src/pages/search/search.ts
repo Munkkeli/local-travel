@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { MediaProvider } from '../../providers/media/media';
 import { PipesModule } from '../../pipes/pipes.module';
-import { Observable } from 'rxjs/Observable';
 import { IPic } from '../../interfaces/media';
 import { PlayerPage } from '../player/player';
 
@@ -32,7 +31,7 @@ export class SearchPage {
   }
 
   showUploadButton = false;
-  picArray: Observable<IPic[]>;
+  picArray: IPic[];
 
   searchChange = () => {
     if (this.timeout) clearTimeout(this.timeout);
@@ -43,8 +42,23 @@ export class SearchPage {
     }, 500);
   };
 
+  appMediaFilter = (pic: IPic) => {
+    let description = { isLocalTravel: false };
+    try {
+      description = JSON.parse(pic.description);
+    } catch (e) {
+      return false;
+    }
+
+    return !!description.isLocalTravel;
+  };
+
   getAllFiles = () => {
-    this.picArray = this.mediaProvider.searchAllFiles(this.search);
+    this.mediaProvider.searchAllFiles(this.search).subscribe(res => {
+      res.reverse();
+      res = res.filter(this.appMediaFilter);
+      this.picArray = res;
+    });
   };
 
   showFullImage = (item: IPic) => {

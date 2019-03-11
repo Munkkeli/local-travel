@@ -40,16 +40,15 @@ export class PlayerPage {
       .subscribe(res => {
         this.media = res;
 
-        const pattern = '\\[f\\](.*?)\\[\\/f\\]';
-        const re = new RegExp(pattern);
-        // console.log(re.exec(value));
         try {
-          this.filters = JSON.parse(re.exec(res.description)[1]);
-          this.style = `brightness(${this.filters.brightness}%) contrast(${
-            this.filters.contrast
-          }%) saturate(${this.filters.saturation}%) sepia(${
-            this.filters.sepia
-          }%)`;
+          this.filters = JSON.parse(res.description).style;
+          if (this.filters) {
+            this.style = `brightness(${this.filters.brightness}%) contrast(${
+              this.filters.contrast
+            }%) saturate(${this.filters.saturation}%) sepia(${
+              this.filters.sepia
+            }%)`;
+          }
         } catch (e) {
           console.error(e);
         }
