@@ -6,36 +6,38 @@
 -->
 
 <ion-content padding>
-  <div class="profile-container">
-    <div class="profile-img-container">
-      <img
-        id="user-profile-img"
-        [src]="mediaProvider.mediaUploads + profilePicture"
-      />
+  <div id="profile-wrapper">
+    <div class="profile-container">
+      <div class="profile-img-container">
+        <img
+          id="user-profile-img"
+          [src]="mediaProvider.mediaUploads + profilePicture"
+        />
+      </div>
+      <div class="user-info">
+        <h1>{{ userInformation.full_name }}</h1>
+        <p>@{{ userInformation.username }}</p>
+      </div>
+      <button ion-button outline item-end (click)="logout()">Logout</button>
     </div>
-    <div class="user-info">
-      <h1>{{ userInformation.full_name }}</h1>
-      <p>@{{ userInformation.username }}</p>
+    <div id="uploads">
+      <ion-grid *ngIf="!loading">
+        <ion-row>
+          <ion-col
+            col-4
+            *ngFor="let pic of userUploads"
+            class="user-upload"
+            (click)="showFullImage(pic)"
+          >
+            <img
+              [src]="
+                mediaProvider.mediaUploads +
+                (pic.file_id | thumbnailPipe: 'medium')
+              "
+            />
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </div>
-    <button ion-button outline item-end (click)="logout()">Logout</button>
-  </div>
-  <div id="uploads">
-    <ion-grid *ngIf="!loading">
-      <ion-row>
-        <ion-col
-          col-4
-          *ngFor="let pic of userUploads"
-          class="user-upload"
-          (click)="showFullImage(pic)"
-        >
-          <img
-            [src]="
-              mediaProvider.mediaUploads +
-              (pic.file_id | thumbnailPipe: 'medium')
-            "
-          />
-        </ion-col>
-      </ion-row>
-    </ion-grid>
   </div>
 </ion-content>

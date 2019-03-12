@@ -1,4 +1,15 @@
 page-upload {
+  #submit-form {
+    padding: 2rem;
+    background: white;
+    border-radius: 5px;
+    box-shadow: $card-shadow;
+
+    #submit-btn {
+      margin-top: 2rem;
+      width: 100%;
+    }
+  }
   .image {
     display: block;
     margin: 16px auto;

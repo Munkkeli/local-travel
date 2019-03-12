@@ -43,7 +43,7 @@ export class PlayerPage {
 
         const user = JSON.parse(localStorage.getItem('user'));
 
-        this.ownMedia = user.user_id === res.user_id;
+        this.ownMedia = user && user.user_id === res.user_id;
 
         try {
           this.filters = JSON.parse(res.description).style;
@@ -58,9 +58,13 @@ export class PlayerPage {
           console.error(e);
         }
 
-        this.mediaProvider.getUser(res.user_id).subscribe(res2 => {
-          this.username = res2.username;
-        });
+        if (user) {
+          this.mediaProvider.getUser(res.user_id).subscribe(res2 => {
+            this.username = res2.username;
+          });
+        } else {
+          this.username = null;
+        }
       });
   }
 

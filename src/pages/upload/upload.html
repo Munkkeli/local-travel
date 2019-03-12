@@ -6,102 +6,107 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>Upload media</ion-title>
+    <ion-title>Upload</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <form (ngSubmit)="uploadFormSubmit()">
-    <ion-item>
-      <ion-label floating>Title</ion-label>
-      <ion-input
-        type="text"
-        [(ngModel)]="upload.title"
-        name="title"
-      ></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label floating>Description</ion-label>
-      <ion-textarea
-        [(ngModel)]="upload.description"
-        name="description"
-      ></ion-textarea>
-    </ion-item>
+  <div id="upload-wrapper">
+    <form id="submit-form" (ngSubmit)="uploadFormSubmit()">
+      <ion-item>
+        <ion-label floating>Title</ion-label>
+        <ion-input
+          type="text"
+          [(ngModel)]="upload.title"
+          name="title"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Description</ion-label>
+        <ion-textarea
+          [(ngModel)]="upload.description"
+          name="description"
+        ></ion-textarea>
+      </ion-item>
 
-    <ion-item *ngIf="!showChooser">
-      <ion-label floating>File</ion-label>
-      <ion-input
-        type="file"
-        (change)="handleFileChange($event)"
-        name="file"
-      ></ion-input>
-    </ion-item>
+      <ion-item *ngIf="!showChooser">
+        <ion-label floating>File</ion-label>
+        <ion-input
+          clearInput
+          id="choose-file-desktop"
+          type="file"
+          (change)="handleFileChange($event)"
+          name="file"
+        ></ion-input>
+      </ion-item>
 
-    <button
-      *ngIf="showChooser"
-      ion-button
-      type="button"
-      (click)="handleFileChoose()"
-    >
-      Choose a file
-    </button>
+      <button
+        *ngIf="showChooser"
+        ion-button
+        type="button"
+        (click)="handleFileChoose()"
+      >
+        Choose a file
+      </button>
 
-    <button
-      ion-button
-      type="submit"
-      [disabled]="!((file || blob) && upload.title)"
-      block
-    >
-      Upload
-    </button>
-    <button ion-button type="button" clear block (click)="handleClear()">
-      Clear form
-    </button>
-  </form>
+      <button
+        id="submit-btn"
+        ion-button
+        type="submit"
+        [disabled]="!((file || blob) && upload.title)"
+        block
+      >
+        Upload
+      </button>
+      <button ion-button type="button" clear block (click)="handleClear()">
+        Clear form
+      </button>
+    </form>
 
-  <div *ngIf="preview">
-    <ion-range
-      [(ngModel)]="style.brightness"
-      pin="true"
-      max="200"
-      (ionChange)="handleStyleChange()"
-    >
-      <ion-icon small range-left name="sunny"></ion-icon>
-      <ion-icon range-right name="sunny"></ion-icon>
-    </ion-range>
-    <ion-range
-      [(ngModel)]="style.contrast"
-      pin="true"
-      max="200"
-      (ionChange)="handleStyleChange()"
-    >
-      <ion-icon small range-left name="contrast"></ion-icon>
-      <ion-icon range-right name="contrast"></ion-icon>
-    </ion-range>
-    <ion-range
-      [(ngModel)]="style.saturation"
-      pin="true"
-      max="200"
-      (ionChange)="handleStyleChange()"
-    >
-      <ion-icon small range-left name="water"></ion-icon>
-      <ion-icon range-right name="water"></ion-icon>
-    </ion-range>
-    <ion-range
-      [(ngModel)]="style.sepia"
-      pin="true"
-      max="100"
-      (ionChange)="handleStyleChange()"
-    >
-      <ion-icon small range-left name="thermometer"></ion-icon>
-      <ion-icon range-right name="thermometer"></ion-icon>
-    </ion-range>
+    <div *ngIf="preview">
+      <ion-range
+        [(ngModel)]="style.brightness"
+        pin="true"
+        max="200"
+        (ionChange)="handleStyleChange()"
+      >
+        <ion-icon small range-left name="sunny"></ion-icon>
+        <ion-icon range-right name="sunny"></ion-icon>
+      </ion-range>
+      <ion-range
+        [(ngModel)]="style.contrast"
+        pin="true"
+        max="200"
+        (ionChange)="handleStyleChange()"
+      >
+        <ion-icon small range-left name="contrast"></ion-icon>
+        <ion-icon range-right name="contrast"></ion-icon>
+      </ion-range>
+      <ion-range
+        [(ngModel)]="style.saturation"
+        pin="true"
+        max="200"
+        (ionChange)="handleStyleChange()"
+      >
+        <ion-icon small range-left name="water"></ion-icon>
+        <ion-icon range-right name="water"></ion-icon>
+      </ion-range>
+      <ion-range
+        [(ngModel)]="style.sepia"
+        pin="true"
+        max="100"
+        (ionChange)="handleStyleChange()"
+      >
+        <ion-icon small range-left name="thermometer"></ion-icon>
+        <ion-icon range-right name="thermometer"></ion-icon>
+      </ion-range>
 
-    <img
-      class="image"
-      [ngStyle]="{ filter: filter }"
-      *ngIf="image"
-      [src]="image"
-    />
+      <img
+        class="image"
+        [ngStyle]="{ filter: filter }"
+        *ngIf="image"
+        [src]="image"
+      />
+    </div>
   </div>
 </ion-content>

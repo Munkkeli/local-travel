@@ -1,4 +1,10 @@
 page-profile {
+  #profile-wrapper {
+    @include desktop {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  }
   .fixed-content,
   .scroll-content {
     .profile-container {
@@ -46,6 +52,11 @@ page-profile {
           margin-right: -1rem;
           display: flex;
           flex-wrap: wrap;
+
+          @include desktop {
+            margin-left: -3rem;
+            margin-right: -3rem;
+          }
         }
 
         .user-upload {

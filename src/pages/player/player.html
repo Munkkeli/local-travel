@@ -11,34 +11,36 @@
 </ion-header>
 
 <ion-content padding>
-  <div *ngIf="media">
-    <video *ngIf="media.media_type === 'video'" class="media" controls>
-      <source
+  <div id="player-wrapper">
+    <div *ngIf="media">
+      <video *ngIf="media.media_type === 'video'" class="media" controls>
+        <source
+          [src]="mediaProvider.mediaUploads + media.filename"
+          [type]="media.mime_type"
+        />
+      </video>
+      <audio *ngIf="media.media_type === 'audio'" class="media" controls>
+        <source
+          [src]="mediaProvider.mediaUploads + media.filename"
+          [type]="media.mime_type"
+        />
+      </audio>
+      <img
+        *ngIf="media.media_type === 'image'"
         [src]="mediaProvider.mediaUploads + media.filename"
-        [type]="media.mime_type"
+        [ngStyle]="{ filter: style }"
+        class="media"
       />
-    </video>
-    <audio *ngIf="media.media_type === 'audio'" class="media" controls>
-      <source
-        [src]="mediaProvider.mediaUploads + media.filename"
-        [type]="media.mime_type"
-      />
-    </audio>
-    <img
-      *ngIf="media.media_type === 'image'"
-      [src]="mediaProvider.mediaUploads + media.filename"
-      [ngStyle]="{ filter: style }"
-      class="media"
-    />
 
-    <h2>{{ media.title }}</h2>
-    <p>{{ media.description | descriptionPipe }}</p>
-    <p>
-      Created by <b>{{ username }}</b>
-    </p>
+      <h2>{{ media.title }}</h2>
+      <p>{{ media.description | descriptionPipe }}</p>
+      <p *ngIf="username">
+        Created by <b>{{ username }}</b>
+      </p>
 
-    <button *ngIf="ownMedia" ion-button (click)="deletePost()" color="danger">
-      Delete
-    </button>
+      <button *ngIf="ownMedia" ion-button (click)="deletePost()" color="danger">
+        Delete
+      </button>
+    </div>
   </div>
 </ion-content>

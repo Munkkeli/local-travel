@@ -77,4 +77,13 @@
     width: 100%;
     border-radius: 0;
   }
+
+  .list,
+  #player-wrapper,
+  #upload-wrapper {
+    @include desktop {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  }
 }
