@@ -69,6 +69,16 @@ export class MediaProvider {
     return this.http.post<any>(this.mediaApi + '/media', data, httpOptions);
   };
 
+  removePost = (id: number) => {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'x-access-token': localStorage.getItem('token')
+      })
+    };
+
+    return this.http.delete<any>(this.mediaApi + '/media/' + id, httpOptions);
+  };
+
   addTag = (id: number, tag: string) => {
     const httpOptions = {
       headers: new HttpHeaders({

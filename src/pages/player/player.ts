@@ -26,6 +26,7 @@ export class PlayerPage {
     sepia: 0;
   };
   style = '';
+  ownMedia = false;
 
   constructor(
     public navCtrl: NavController,
@@ -39,6 +40,10 @@ export class PlayerPage {
       .getSingleMedia(this.navParams.get('id'))
       .subscribe(res => {
         this.media = res;
+
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        this.ownMedia = user.user_id === res.user_id;
 
         try {
           this.filters = JSON.parse(res.description).style;
@@ -54,9 +59,14 @@ export class PlayerPage {
         }
 
         this.mediaProvider.getUser(res.user_id).subscribe(res2 => {
-          console.log(res2);
           this.username = res2.username;
         });
       });
   }
+
+  deletePost = () => {
+    this.mediaProvider.removePost(this.media.file_id).subscribe(res => {
+      this.navCtrl.pop().catch(console.error);
+    });
+  };
 }

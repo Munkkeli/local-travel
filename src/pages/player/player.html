@@ -6,19 +6,19 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>Player</ion-title>
+    <ion-title>Post</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <div *ngIf="media">
-    <video *ngIf="media.media_type === 'video'" controls>
+    <video *ngIf="media.media_type === 'video'" class="media" controls>
       <source
         [src]="mediaProvider.mediaUploads + media.filename"
         [type]="media.mime_type"
       />
     </video>
-    <audio *ngIf="media.media_type === 'audio'" controls>
+    <audio *ngIf="media.media_type === 'audio'" class="media" controls>
       <source
         [src]="mediaProvider.mediaUploads + media.filename"
         [type]="media.mime_type"
@@ -28,10 +28,17 @@
       *ngIf="media.media_type === 'image'"
       [src]="mediaProvider.mediaUploads + media.filename"
       [ngStyle]="{ filter: style }"
+      class="media"
     />
 
     <h2>{{ media.title }}</h2>
-    <h5>Posted by {{ username }}</h5>
     <p>{{ media.description | descriptionPipe }}</p>
+    <p>
+      Created by <b>{{ username }}</b>
+    </p>
+
+    <button *ngIf="ownMedia" ion-button (click)="deletePost()" color="danger">
+      Delete
+    </button>
   </div>
 </ion-content>
