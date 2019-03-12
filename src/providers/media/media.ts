@@ -28,6 +28,18 @@ export class MediaProvider {
     return this.http.get<IPic>(this.mediaApi + `/media/${id}`);
   };
 
+  getUserMedia = (id: number) => {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'x-access-token': localStorage.getItem('token')
+      })
+    };
+    return this.http.get<IPic[]>(
+      this.mediaApi + `/media/user/${id}`,
+      httpOptions
+    );
+  };
+
   getAllFilesByTag = (tag: string) => {
     return this.http.get<IPic[]>(this.mediaApi + '/tags/' + tag);
   };

@@ -1,3 +1,77 @@
 page-profile {
+  .fixed-content,
+  .scroll-content {
+    .profile-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin: -2rem -2rem 2rem -2rem;
+      padding: 2rem;
+      background: color($colors, light);
+      box-shadow: $profile-shadow;
 
+      .profile-img-container {
+        width: 128px;
+        margin: 0 auto;
+      }
+
+      .user-info {
+        margin-top: 2rem;
+        text-align: center;
+        h1 {
+          margin: 0;
+        }
+
+        p {
+          margin-top: 0.5rem;
+        }
+      }
+    }
+
+    #uploads {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      .img-container {
+        width: 128px;
+        position: absolute;
+        top: calc(100vh - 90vh);
+      }
+
+      ion-grid {
+        ion-row {
+          margin-left: -1rem;
+          margin-right: -1rem;
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        .user-upload {
+          margin: 0.5rem;
+          flex: 0 0 calc((100% - 3rem) / 3);
+          border-radius: 2px;
+          overflow: hidden;
+          box-shadow: $grid-item-shadow;
+          &.user-upload:before {
+            content: '';
+            display: block;
+            padding-top: 100%;
+          }
+
+          img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+          }
+        }
+      }
+    }
+  }
 }
