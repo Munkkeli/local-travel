@@ -46,8 +46,10 @@ export class ProfilePage {
     const img = document.getElementById('user-profile-img');
     this.mediaProvider.getAllFilesByTag('profile').subscribe(res => {
       const image = res.find(x => x.user_id === user_id);
-      if (image) this.profilePicture = image.filename;
-      img.setAttribute('src', `${defaultProfileImg}`);
+      this.profilePicture = image
+        ? this.mediaProvider.mediaUploads + image.filename
+        : defaultProfileImg;
+      img.setAttribute('src', `${this.profilePicture}`);
     });
   };
 
@@ -74,7 +76,15 @@ export class ProfilePage {
         uploadsContainer.appendChild(imgContainer);
       }
       console.log(uploads.length);
-      this.userUploads = uploads.reverse();
+      this.userUploads = uploads
+        .filter(x => {
+          try {
+            return JSON.parse(x.description).isLocalTravel;
+          } catch (e) {
+            return false;
+          }
+        })
+        .reverse();
     });
   };
 
